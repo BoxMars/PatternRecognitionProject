@@ -47,12 +47,18 @@ train_iterator = data.DataLoader(SatalliteDataset(X_train,y_train, True), batch_
 Here is some example of dataset.
 
 Unprocessed:
-![](/slidev/img/plot.png)
+
+![](img/plot.png)
+
 Normalization:
-![](/slidev/img/plotnor.png)
+
+![](img/plotnor.png)
+
 ## Model Design
 ### AlexNet
-![](/slidev/img/alexnet.png)
+
+![](img/alexnet.png)
+
 code version:
 ```python
 class AlexNet(nn.Module):
@@ -73,7 +79,6 @@ class AlexNet(nn.Module):
             nn.MaxPool2d(2),
             nn.ReLU(inplace=True)
         )
-
         self.classifier = nn.Sequential(
             nn.Dropout(0.5),
             nn.Linear(4096, 4096),
@@ -83,7 +88,6 @@ class AlexNet(nn.Module):
             nn.ReLU(inplace=True),
             nn.Linear(4096, output_dim),
         )
-
     def forward(self, x):
         x = self.features(x)
         h = x.view(x.shape[0], -1)
@@ -93,5 +97,66 @@ class AlexNet(nn.Module):
 ## Model Training
 ### Find the best learning rate
 In this part, I build a class `LRFinder` to find the best learning rate. In the function `range_test()`, 
+```python
+def range_test(self, iterator, end_lr=10, num_iter=100,
+                   smooth_f=0.05, diverge_th=5):
+        lrs = []
+        losses = []
+        best_loss = float('inf')
+        lr_scheduler = ExponentialLR(self.optimizer, end_lr, num_iter)
+        iterator = IteratorWrapper(iterator)
+        for iteration in range(num_iter):
+            loss = self._train_batch(iterator)
+            lrs.append(lr_scheduler.get_last_lr()[0])
+            # update lr
+            lr_scheduler.step()
+            if iteration > 0:
+                loss = smooth_f * loss + (1 - smooth_f) * losses[-1]
+            if loss < best_loss:
+                best_loss = loss
+            losses.append(loss)
+            if loss > diverge_th * best_loss:
+                print("Stopping early, the loss has diverged")
+                break
+        # reset model to initial parameters
+        model.load_state_dict(torch.load('init_params.pt'))
 
+        return lrs, losses
+```
+This is the result:
+
+![](img/lr.png)
+
+From this image, we can see that when `LR=10e-4`, loss decreas fastest. SO we choose `10e-4`as the learning rate.
+
+### Training the model
+This is the code of training:
+```python
+def train(model, iterator, optimizer, criterion, device):
+    epoch_loss = 0
+    epoch_acc = 0
+    model.train()
+    for (x, y) in tqdm(iterator, desc="Training", leave=False):
+        x = x.to(device)
+        y = y.to(device)
+        optimizer.zero_grad()
+        y_pred, _ = model(x)
+        loss = criterion(y_pred, y)
+        acc = calculate_accuracy(y_pred, y)
+        loss.backward()
+        optimizer.step()
+        epoch_loss += loss.item()
+        epoch_acc += acc.item()
+    return epoch_loss / len(iterator), epoch_acc / len(iterator)
+```
 ## Model Performance Evaluation
+
+After 25 epoches of training, 
+```
+Train Acc: 94.73%
+Val. Acc: 95.97%
+Test Acc: 96.05%
+```
+And for test data, the prediction result is shown below.
+
+![](img/mat.png)

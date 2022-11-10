@@ -44,8 +44,8 @@ image: https://source.unsplash.com/collection/94734566/1920x1080
 - 📝 **Data Loading** - loading data from file, build datasets and dataloaders
 - 🎨 **Plot Example Image** - show some exmaple image of each class
 - 🧑‍💻 **Model Design** - *AlexNet*
-- 🤹 **Model Training** - find the best lossing rate, and training the model
-- 🎥 **Model Performance Evaluation** - built-in recording and camera view
+- 🤹 **Model Training** - find the best learning rate, and training the model
+- 🎥 **Model Performance Evaluation** 
 
 <!--
 You can have `style` tag in markdown to override the style for the current page.
