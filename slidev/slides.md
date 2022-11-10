@@ -286,14 +286,51 @@ for epoch in trange(EPOCHS, desc="Epochs"):
     print(f'\t Val. Loss: {valid_loss:.3f} |  Val. Acc: {valid_acc*100:.2f}%')
 ```
 
+```
+Epoch: 25 | Epoch Time: 0m 6s
+	Train Loss: 0.144 | Train Acc: 94.11% | Train Prec: 89.58% | Train Recall: 85.42%
+	 Val. Loss: 0.129 |  Val. Acc: 95.03% |  Val. Prec: 91.67% |  Val. Recall: 87.50%
+```
+
+---
+layout: center
 ---
 
 # Model Performance Evaluation
+
+<img src="/img/loss.png" class="h-90 rounded" />
+
+---
+layout: center
+---
+
+# Model Performance Evaluation
+
+<img src="/img/acc.png" class="h-90 rounded" />
+
+---
+layout: center
+---
+
+# Model Performance Evaluation
+
+<img src="/img/prec.png" class="h-90 rounded" />
+
+---
+layout: center
+---
+
+# Model Performance Evaluation
+
+<img src="/img/recall.png" class="h-90 rounded" />
+
+
+---
+
+# Model Performance Evaluation
+
 ```
-Epoch: 25 | Epoch Time: 0m 5s
-	Train Loss: 0.116 | Train Acc: 95.74%
-	 Val. Loss: 0.193 |  Val. Acc: 92.22%
-Test Loss: 0.161 | Test Acc: 93.81%
+Test Loss: 0.118 | Test Acc: 96.05% | Test Pred: 66.67% | Test Recall: 55.56%
 ```
 <img src="/img/mat.png" class="h-60 rounded" />
 

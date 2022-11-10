@@ -143,20 +143,30 @@ def train(model, iterator, optimizer, criterion, device):
         y_pred, _ = model(x)
         loss = criterion(y_pred, y)
         acc = calculate_accuracy(y_pred, y)
+        prec,recall = precision_recall(y_pred, y, average='macro', num_classes=4)
         loss.backward()
         optimizer.step()
         epoch_loss += loss.item()
         epoch_acc += acc.item()
-    return epoch_loss / len(iterator), epoch_acc / len(iterator)
+    return epoch_loss / len(iterator), epoch_acc / len(iterator), prec.to('cpu'), recall.to('cpu')
 ```
 ## Model Performance Evaluation
 
 After 25 epoches of training, 
 ```
-Train Acc: 94.73%
-Val. Acc: 95.97%
-Test Acc: 96.05%
+Epoch: 25 | Epoch Time: 0m 6s
+	Train Loss: 0.144 | Train Acc: 94.11% | Train Prec: 89.58% | Train Recall: 85.42%
+	 Val. Loss: 0.129 |  Val. Acc: 95.03% |  Val. Prec: 91.67% |  Val. Recall: 87.50%
 ```
+
+![](img/loss.png)
+
+![](img/acc.png)
+
+![](img/prec.png)
+
+![](img/recall.png)
+
 And for test data, the prediction result is shown below.
 
 ![](img/mat.png)
